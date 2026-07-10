@@ -111,7 +111,30 @@ export function detectIssues(filePath, root, options = {}) {
 
   // ── HARDCODED_KEY: Text that looks like an i18n key ─────────────────
   const i18nKeyPattern = /^[a-z]+(?:\.[a-zA-Z]\w*)+$/;
-  function checkHardcodedKeys(node) {
+
+  /** Known translation function / method names whose string-literal arguments should be ignored. */
+  const TRANSLATION_FNS = new Set(['t', 'translate', 'formatMessage', 'formatmessage', '$t']);
+
+  /**
+   * Check whether `node` is the string-literal argument of a translation call.
+   * Handles: t('key'), translate('key'), formatMessage('key'),
+   *          i18n.t('key'), i18n.translate('key'), i18n.formatMessage('key').
+   */
+  function isTranslationCallArg(node, parent) {
+    if (!parent || !ts.isCallExpression(parent)) return false;
+    const callee = parent.expression;
+    // Direct call: t(...), translate(...), formatMessage(...)
+    if (ts.isIdentifier(callee) && TRANSLATION_FNS.has(callee.text)) return true;
+    // Property access: i18n.t(...), i18n.translate(...)
+    if (ts.isPropertyAccessExpression(callee)) {
+      const obj = callee.expression;
+      const prop = callee.name;
+      if (ts.isIdentifier(obj) && obj.text === 'i18n' && ts.isIdentifier(prop) && TRANSLATION_FNS.has(prop.text)) return true;
+    }
+    return false;
+  }
+
+  function checkHardcodedKeys(node, parent) {
     if (ts.isJsxText(node)) {
       const text = node.text.trim();
       if (text && i18nKeyPattern.test(text)) {
@@ -127,8 +150,8 @@ export function detectIssues(filePath, root, options = {}) {
         });
       }
     }
-    // Also check string literals passed as children
-    if (ts.isStringLiteral(node)) {
+    // Check string literals that are NOT arguments to translation calls
+    if (ts.isStringLiteral(node) && !isTranslationCallArg(node, parent)) {
       const text = node.text.trim();
       if (text && i18nKeyPattern.test(text)) {
         const line = sourceFile.getLineAndCharacterOfPosition(node.getStart()).line + 1;
@@ -143,9 +166,9 @@ export function detectIssues(filePath, root, options = {}) {
         });
       }
     }
-    ts.forEachChild(node, checkHardcodedKeys);
+    ts.forEachChild(node, child => checkHardcodedKeys(child, node));
   }
-  ts.forEachChild(sourceFile, checkHardcodedKeys);
+  ts.forEachChild(sourceFile, (child) => checkHardcodedKeys(child, undefined));
 
   // ── MISSING_ROUTE: Astro-declared route not in RouteHydrator (cross-file check) ──
   // This is done at the aggregate level in the CLI, not per-file here.
