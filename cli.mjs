@@ -25,6 +25,7 @@ import { scanFiles, parseFile, extractImports, extractI18nKeys, extractClassToke
 import { extractRoutes, extractGeneratorRoutes } from './tsx/routes.mjs';
 import { detectIssues, checkRouteDiscrepancy } from './tsx/issues.mjs';
 import { formatOutput, computeSummary } from './shared/output.mjs';
+import { loadConfig } from './shared/config-loader.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -33,10 +34,12 @@ function showHelp() {
 UX Extract — Source-based UX extraction toolkit
 
 USAGE:
-  node src/ux-extract/cli.mjs --root <path> [options]
+  node cli.mjs --root <path> [options]
+  node cli.mjs --config <file> [options]
 
 OPTIONS:
-  --root <path>         Scan root directory (default: cwd)
+  --config <file>       Load project config (.toml or .json) from configs-cli/
+  --root <path>         Scan root directory (default: cwd, or from config)
   --format <fmt>        Output format: json | markdown (default: json)
   --out <file>          Write output to file
   --include <pattern>   Source include pattern (repeatable or comma-separated)
@@ -51,6 +54,7 @@ function parseArgs() {
   const args = process.argv.slice(2);
   const opts = {
     root: null,
+    config: null,
     format: 'json',
     out: null,
     include: [],
@@ -64,6 +68,9 @@ function parseArgs() {
       case '--help':
         showHelp();
         process.exit(0);
+      case '--config':
+        opts.config = args[++i];
+        break;
       case '--root':
         opts.root = args[++i];
         break;
@@ -121,6 +128,16 @@ function parseArgs() {
  */
 async function main() {
   const opts = parseArgs();
+
+  // ── 0. Load config file if provided ──────────────────────────────────
+  let configData = {};
+  if (opts.config) {
+    configData = loadConfig(opts.config);
+    // Config provides defaults; CLI flags override
+    if (!opts.root && configData.root) opts.root = configData.root;
+    if (!opts.legacyMap && configData.legacyRoutes) opts.legacyMap = configData.legacyRoutes;
+  }
+
   const root = opts.root;
 
   // ── 1. Scan files ─────────────────────────────────────────────────────

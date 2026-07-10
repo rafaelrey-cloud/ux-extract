@@ -3,7 +3,10 @@ reports/
 *.log
 .DS_Store
 
-# configs-cli/ — project-specific configs with secrets; NEVER push
+# configs-cli/ — per-project configs with secrets; NEVER push
 configs-cli/*
 !configs-cli/.gitkeep
 !configs-cli/README.md
+
+# config/ — public templates and schema docs (versioned)
+# config/template.toml and any .md files are tracked

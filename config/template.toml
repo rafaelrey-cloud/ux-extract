@@ -1,0 +1,34 @@
+# ── Template for a new project config ──────────────────
+# Copy this file, rename it to <project-name>.toml, and fill in
+# the values. The copy will be automatically git-ignored.
+#
+# Example: cp config/template.toml configs-cli/my-project.toml
+
+project = ""
+
+# Absolute path to the project source code
+root = ""
+
+# ── Legacy route mappings ─────────────────────────────
+# Routes that were renamed; ux-extract will flag links
+# pointing to old paths and suggest the canonical version.
+[legacyRoutes]
+# "/old-path" = "/new-path"
+
+# ── Target URL (for future html/runtime layers) ───────
+targetUrl = ""
+
+# ── Database adapter (for future db layer) ────────────
+# Minimal-privilege access for querying real state.
+[db]
+type         = ""
+binding      = ""
+databaseId   = ""
+accountId    = ""
+apiToken     = ""
+
+# ── API endpoints (for future runtime layer) ──────────
+[api]
+baseUrl      = ""
+healthPath   = ""
+authToken    = ""
