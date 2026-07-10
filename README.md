@@ -35,7 +35,7 @@ npm run ux:validate
 | `--include` | string[] | `**/*.tsx,**/*.ts,**/*.astro,**/*.mjs,**/*.js` | Source patterns (repeatable or comma-separated) |
 | `--deterministic` | flag | `false` | Omit timestamp; sort all arrays stably |
 | `--fail-on` | `error`\|`warning`\|`never` | `never` | Exit code threshold |
-| `--legacy-map` | JSON string | `{"/sala":"/floor","/cocina":"/kitchen"}` | Custom legacy route mapping |
+| `--legacy-map` | JSON string | `{}` | Custom legacy route mapping (e.g. `{"/old":"/new"}`) |
 | `--help` | flag | | Show help |
 
 ## Output Schema
@@ -50,29 +50,29 @@ npm run ux:validate
   "files": ["src/App.tsx", ...],
   "components": [
     {
-      "name": "Sala",
-      "file": "src/pages/Sala.tsx",
+      "name": "Dashboard",
+      "file": "src/pages/Dashboard.tsx",
       "exported": true,
       "isDefault": true,
       "line": 10,
       "jsxTags": ["div", "Link", "h1"],
-      "children": ["FloorCard", "OrderList"],
-      "classTokens": ["sala-container", "p-4"],
-      "textSnippets": ["Floor View"],
-      "routeLinks": ["/floor"]
+      "children": ["DashboardCard", "StatsPanel"],
+      "classTokens": ["dashboard-container", "p-4"],
+      "textSnippets": ["Dashboard View"],
+      "routeLinks": ["/dashboard"]
     }
   ],
   "imports": [
     { "source": "react-router-dom", "imported": "Link", "local": "Link", "file": "src/App.tsx", "line": 3 }
   ],
   "routes": [
-    { "path": "/floor", "file": "src/App.tsx", "source": "route", "component": "Sala", "line": 15 }
+    { "path": "/dashboard", "file": "src/App.tsx", "source": "route", "component": "Dashboard", "line": 15 }
   ],
   "links": [
-    { "to": "/floor", "file": "src/Nav.tsx", "line": 5, "tag": "Link", "text": "Floor" }
+    { "to": "/dashboard", "file": "src/Nav.tsx", "line": 5, "tag": "Link", "text": "Dashboard" }
   ],
   "i18nKeys": [
-    { "key": "floor.title", "file": "src/Nav.tsx", "line": 6, "context": "t()" }
+    { "key": "dashboard.title", "file": "src/Nav.tsx", "line": 6, "context": "t()" }
   ],
   "classTokens": [
     { "token": "btn-primary", "file": "src/Button.tsx", "count": 2 }
@@ -83,9 +83,9 @@ npm run ux:validate
       "code": "LEGACY_ROUTE",
       "file": "src/LegacyNav.tsx",
       "line": 8,
-      "message": "Link or reference to legacy path \"/sala\" (canonical: \"/floor\")",
-      "evidence": "\"/sala\"",
-      "suggestion": "Replace with \"/floor\""
+      "message": "Link or reference to legacy path \"/old\" (canonical: \"/new\")",
+      "evidence": "\"/old\"",
+      "suggestion": "Replace with \"/new\""
     }
   ],
   "summary": {

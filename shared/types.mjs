@@ -20,7 +20,7 @@
 
 /**
  * @typedef {Object} RouteRecord
- * @property {string} path      - Route path string (e.g. "/floor", "/kitchen")
+ * @property {string} path      - Route path string (e.g. "/dashboard", "/settings")
  * @property {string} file      - File where the route was declared
  * @property {string} source    - "route" (direct <Route>), "wrapper" (Astro wrapper gen), "link"
  * @property {string} [component] - Component name associated with this route
@@ -47,7 +47,7 @@
 
 /**
  * @typedef {Object} I18nKeyRecord
- * @property {string} key       - i18n key string (e.g. "sala.goDelivery")
+ * @property {string} key       - i18n key string (e.g. "dashboard.title")
  * @property {string} file      - File containing the key
  * @property {number} [line]    - Line number
  * @property {string} context   - "t()" call, "key={...}", or "text" (untranslated-looking)

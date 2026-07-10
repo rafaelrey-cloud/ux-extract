@@ -12,7 +12,7 @@ import path from 'node:path';
  * Looks for:
  *   - <Route path="..." element={...} /> in React Router
  *   - RouteHydrator usage in Astro wrappers
- *   - Canonical path mappings in objects like `{ Sala: "/floor" }`
+ *   - Canonical path mappings in objects like `{ Dashboard: "/dashboard" }`
  *
  * @param {string} filePath - Absolute path to source file
  * @param {string} root     - Scan root
@@ -85,14 +85,14 @@ export function extractRoutes(filePath, root) {
       }
     }
 
-    // Detect canonical path mapping objects like { Sala: "/floor", Cocina: "/kitchen" }
+    // Detect canonical path mapping objects like { Dashboard: "/dashboard" }
     if (ts.isPropertyAssignment(node) &&
         node.initializer && ts.isStringLiteral(node.initializer) &&
         node.initializer.text.startsWith('/')) {
       const propName = node.name.getText(sourceFile);
       const line = sourceFile.getLineAndCharacterOfPosition(node.getStart()).line + 1;
 
-      // Only if it looks like a route mapping (e.g., Sala: "/floor")
+      // Only if it looks like a route mapping (PascalCase property name)
       if (propName[0] === propName[0]?.toUpperCase()) {
         routes.push({
           path: node.initializer.text,
@@ -179,7 +179,7 @@ export function extractGeneratorRoutes(filePath) {
     }
   }
 
-  // Match redirects: { fromPath: "/sala", toPath: "/floor" }
+  // Match redirects: { fromPath: "/old", toPath: "/new" }
   const redirectRegex = /fromPath:\s*["']([^"']+)["']\s*,\s*toPath:\s*["']([^"']+)["']/g;
   const redirects = [];
   const seenRedir = new Set();
