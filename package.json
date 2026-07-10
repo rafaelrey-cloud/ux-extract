@@ -1,0 +1,22 @@
+{
+  "name": "ux-extract",
+  "version": "0.1.0",
+  "description": "Reusable source-based UX extraction and pre-deploy validation toolkit for TSX, Astro and HTML projects.",
+  "type": "module",
+  "private": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "ux-extract": "./cli.mjs"
+  },
+  "scripts": {
+    "extract": "node ./cli.mjs --root . --format markdown",
+    "test": "node --test ./tests/extractor.test.mjs",
+    "validate": "node ./cli.mjs --root . --format json --deterministic --fail-on error"
+  },
+  "dependencies": {
+    "typescript": "^5.9.3"
+  },
+  "license": "MIT"
+}
