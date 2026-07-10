@@ -2,6 +2,8 @@
  * @fileoverview Tests for the UX extraction toolkit.
  * Uses Node.js built-in test runner (node --test).
  * Creates a small fixture directory for isolated testing.
+ *
+ * All fixture data uses neutral, project-agnostic names.
  */
 
 import { describe, it, before, after } from 'node:test';
@@ -18,7 +20,10 @@ const UX_EXTRACT_DIR = path.resolve(__dirname, '..');
 
 let tmpDir;
 
-/** Create a temporary fixture directory with sample source files. */
+/**
+ * Create a temporary fixture directory with sample source files.
+ * All names are generic — no project-specific references.
+ */
 function setupFixture() {
   tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ux-extract-test-'));
 
@@ -45,7 +50,8 @@ export default function Button({ label, to }: ButtonProps) {
 }
 `.trimStart());
 
-  // Component using i18n and old sala link
+  // Component using i18n and legacy links
+  // Uses a --legacy-map to detect /old-dashboard -> /dashboard
   fs.writeFileSync(path.join(tmpDir, 'LegacyNav.tsx'), `
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -55,11 +61,11 @@ export default function LegacyNav() {
 
   return (
     <nav>
-      <Link to="/sala">Sala</Link>
-      <a href="/cocina">Cocina</a>
-      <Link to="/floor">{t('floor.title')}</Link>
-      <a href="/kitchen">{t('kitchen.title')}</a>
-      <span>sala.goDelivery</span>
+      <Link to="/old-dashboard">Dashboard</Link>
+      <a href="/old-settings">Settings</a>
+      <Link to="/dashboard">{t('dashboard.title')}</Link>
+      <a href="/settings">{t('settings.title')}</a>
+      <span>nav.untranslatedKey</span>
     </nav>
   );
 }
@@ -68,16 +74,16 @@ export default function LegacyNav() {
   // Simple Route file
   fs.writeFileSync(path.join(tmpDir, 'AppRoutes.tsx'), `
 import { Routes, Route } from 'react-router-dom';
-import Sala from './Sala';
-import Cocina from './Cocina';
+import Dashboard from './Dashboard';
+import Settings from './Settings';
 import Index from './Index';
 
 export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Index />} />
-      <Route path="/floor" element={<Sala />} />
-      <Route path="/kitchen" element={<Cocina />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/settings" element={<Settings />} />
     </Routes>
   );
 }
@@ -86,8 +92,8 @@ export default function AppRoutes() {
   // RouteHydrator-like mapping
   fs.writeFileSync(path.join(tmpDir, 'RouteHydrator.tsx'), `
 const canonicalPaths = {
-  Sala: "/floor",
-  Cocina: "/kitchen",
+  Dashboard: "/dashboard",
+  Settings: "/settings",
 };
 `.trimStart());
 
@@ -129,6 +135,12 @@ function teardownFixture() {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
 }
+
+// Legacy map used across tests — neutral, project-agnostic
+const TEST_LEGACY_MAP = {
+  '/old-dashboard': '/dashboard',
+  '/old-settings': '/settings',
+};
 
 // ── Tests ──────────────────────────────────────────────────────────────
 
@@ -179,8 +191,8 @@ describe('UX Extractor', () => {
       const { extractI18nKeys } = await import(path.join(UX_EXTRACT_DIR, 'tsx/parser.mjs'));
       const filePath = path.join(fixtureRoot, 'LegacyNav.tsx');
       const keys = extractI18nKeys(filePath, fixtureRoot);
-      assert.ok(keys.some(k => k.key === 'floor.title'));
-      assert.ok(keys.some(k => k.key === 'kitchen.title'));
+      assert.ok(keys.some(k => k.key === 'dashboard.title'));
+      assert.ok(keys.some(k => k.key === 'settings.title'));
     });
   });
 
@@ -191,16 +203,16 @@ describe('UX Extractor', () => {
       const filePath = path.join(fixtureRoot, 'AppRoutes.tsx');
       const routes = extractRoutes(filePath, fixtureRoot);
       assert.ok(routes.some(r => r.path === '/' && r.component === 'Index'));
-      assert.ok(routes.some(r => r.path === '/floor' && r.component === 'Sala'));
-      assert.ok(routes.some(r => r.path === '/kitchen' && r.component === 'Cocina'));
+      assert.ok(routes.some(r => r.path === '/dashboard' && r.component === 'Dashboard'));
+      assert.ok(routes.some(r => r.path === '/settings' && r.component === 'Settings'));
     });
 
     it('should extract canonical path mappings', async () => {
       const { extractRoutes } = await import(path.join(UX_EXTRACT_DIR, 'tsx/routes.mjs'));
       const filePath = path.join(fixtureRoot, 'RouteHydrator.tsx');
       const routes = extractRoutes(filePath, fixtureRoot);
-      assert.ok(routes.some(r => r.path === '/floor' && r.component === 'Sala'));
-      assert.ok(routes.some(r => r.path === '/kitchen' && r.component === 'Cocina'));
+      assert.ok(routes.some(r => r.path === '/dashboard' && r.component === 'Dashboard'));
+      assert.ok(routes.some(r => r.path === '/settings' && r.component === 'Settings'));
     });
   });
 
@@ -210,33 +222,41 @@ describe('UX Extractor', () => {
       const { extractLinks } = await import(path.join(UX_EXTRACT_DIR, 'tsx/parser.mjs'));
       const filePath = path.join(fixtureRoot, 'LegacyNav.tsx');
       const links = extractLinks(filePath, fixtureRoot);
-      assert.ok(links.some(l => l.to === '/sala' && l.tag === 'Link'));
-      assert.ok(links.some(l => l.to === '/cocina' && l.tag === 'a'));
-      assert.ok(links.some(l => l.to === '/floor'));
-      assert.ok(links.some(l => l.to === '/kitchen'));
+      assert.ok(links.some(l => l.to === '/old-dashboard' && l.tag === 'Link'));
+      assert.ok(links.some(l => l.to === '/old-settings' && l.tag === 'a'));
+      assert.ok(links.some(l => l.to === '/dashboard'));
+      assert.ok(links.some(l => l.to === '/settings'));
     });
   });
 
   // ── Issue detection ─────────────────────────────────────────────────
   describe('detectIssues', () => {
-    it('should detect legacy route /sala and /cocina', async () => {
+    it('should detect legacy routes via configured map', async () => {
+      const { detectIssues } = await import(path.join(UX_EXTRACT_DIR, 'tsx/issues.mjs'));
+      const filePath = path.join(fixtureRoot, 'LegacyNav.tsx');
+      const issues = detectIssues(filePath, fixtureRoot, { legacyRouteMap: TEST_LEGACY_MAP });
+      const legacyIssues = issues.filter(i => i.code === 'LEGACY_ROUTE');
+      assert.equal(legacyIssues.length, 2);
+      assert.ok(legacyIssues.some(i => i.evidence === '"/old-dashboard"'));
+      assert.ok(legacyIssues.some(i => i.evidence === '"/old-settings"'));
+      assert.equal(legacyIssues[0].severity, 'error');
+    });
+
+    it('should NOT detect legacy routes without a configured map', async () => {
       const { detectIssues } = await import(path.join(UX_EXTRACT_DIR, 'tsx/issues.mjs'));
       const filePath = path.join(fixtureRoot, 'LegacyNav.tsx');
       const issues = detectIssues(filePath, fixtureRoot);
       const legacyIssues = issues.filter(i => i.code === 'LEGACY_ROUTE');
-      assert.equal(legacyIssues.length, 2);
-      assert.ok(legacyIssues.some(i => i.evidence === '"/sala"'));
-      assert.ok(legacyIssues.some(i => i.evidence === '"/cocina"'));
-      assert.equal(legacyIssues[0].severity, 'error');
+      assert.equal(legacyIssues.length, 0);
     });
 
     it('should detect untranslated i18n key', async () => {
       const { detectIssues } = await import(path.join(UX_EXTRACT_DIR, 'tsx/issues.mjs'));
       const filePath = path.join(fixtureRoot, 'LegacyNav.tsx');
-      const issues = detectIssues(filePath, fixtureRoot);
+      const issues = detectIssues(filePath, fixtureRoot, { legacyRouteMap: TEST_LEGACY_MAP });
       const untranslated = issues.filter(i => i.code === 'UNTRANSLATED');
       assert.equal(untranslated.length, 1);
-      assert.ok(untranslated[0].evidence.includes('sala.goDelivery'));
+      assert.ok(untranslated[0].evidence.includes('nav.untranslatedKey'));
     });
 
     it('should detect missing href on interactive elements', async () => {
@@ -315,7 +335,7 @@ describe('UX Extractor', () => {
       const cliPath = path.join(UX_EXTRACT_DIR, 'cli.mjs');
       const { execSync } = await import('node:child_process');
       const result = execSync(
-        `node "${cliPath}" --root "${fixtureRoot}" --format json --deterministic`,
+        `node "${cliPath}" --root "${fixtureRoot}" --format json --deterministic --legacy-map '${JSON.stringify(TEST_LEGACY_MAP)}'`,
         { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 }
       );
       const parsed = JSON.parse(result);
@@ -325,7 +345,7 @@ describe('UX Extractor', () => {
       assert.ok(Array.isArray(parsed.routes));
       assert.ok(parsed.files.length > 5);
       assert.ok(parsed.components.length >= 4); // Button, LegacyNav, AppRoutes, BrokenLink
-      // Should have LEGACY_ROUTE issues
+      // Should have LEGACY_ROUTE issues (only with --legacy-map)
       const legacyIssues = parsed.issues.filter(i => i.code === 'LEGACY_ROUTE');
       assert.ok(legacyIssues.length >= 2);
       // Should have UNTRANSLATED issues
@@ -337,11 +357,23 @@ describe('UX Extractor', () => {
       const cliPath = path.join(UX_EXTRACT_DIR, 'cli.mjs');
       const { execSync } = await import('node:child_process');
       const result = execSync(
-        `node "${cliPath}" --root "${fixtureRoot}" --format markdown --deterministic`,
+        `node "${cliPath}" --root "${fixtureRoot}" --format markdown --deterministic --legacy-map '${JSON.stringify(TEST_LEGACY_MAP)}'`,
         { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 }
       );
       assert.ok(result.includes('# UX Extraction Report'));
       assert.ok(result.includes('| error |'));
+    });
+
+    it('should NOT detect legacy routes without --legacy-map', async () => {
+      const cliPath = path.join(UX_EXTRACT_DIR, 'cli.mjs');
+      const { execSync } = await import('node:child_process');
+      const result = execSync(
+        `node "${cliPath}" --root "${fixtureRoot}" --format json --deterministic`,
+        { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 }
+      );
+      const parsed = JSON.parse(result);
+      const legacyIssues = parsed.issues.filter(i => i.code === 'LEGACY_ROUTE');
+      assert.equal(legacyIssues.length, 0);
     });
   });
 });

@@ -2,3 +2,8 @@ node_modules/
 reports/
 *.log
 .DS_Store
+
+# configs-cli/ — project-specific configs with secrets; NEVER push
+configs-cli/*
+!configs-cli/.gitkeep
+!configs-cli/README.md

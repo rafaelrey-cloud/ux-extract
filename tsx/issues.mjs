@@ -2,11 +2,10 @@
  * @fileoverview Deterministic issue detection for UX sources.
  *
  * Built-in checks (can be extended or configured):
- * - LEGACY_ROUTE:   Link points to /sala or /cocina (canonical: /floor, /kitchen)
- * - MISSING_ROUTE:  Route declared by Astro wrappers but absent from RouteHydrator
- * - UNTRANSLATED:   i18n key rendered as literal text (e.g. "sala.goDelivery")
+ * - LEGACY_ROUTE:   Link points to a legacy path when a canonical mapping is configured
+ * - MISSING_ROUTE:  Route declared by wrappers but absent from client router
+ * - UNTRANSLATED:   i18n key rendered as literal text (e.g. "section.untranslatedKey")
  * - MISSING_LINK:   Element looks interactive but has no href/to (warning only)
- * - HARDCODED_KEY:  Text string matching i18n key pattern (section.word)
  */
 
 import ts from 'typescript';
@@ -14,14 +13,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 /**
- * Legacy route mapping for redirect detection.
- * Map of old path -> canonical path.
+ * Default legacy route map is empty — the tool ships project-agnostic.
+ * Supply a mapping via --legacy-map or a config file in configs-cli/.
  * @type {Object<string, string>}
  */
-const DEFAULT_LEGACY_MAP = {
-  '/sala': '/floor',
-  '/cocina': '/kitchen',
-};
+const DEFAULT_LEGACY_MAP = {};
 
 /**
  * Detect issues in a source file.
