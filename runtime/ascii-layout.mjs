@@ -6,13 +6,53 @@
  * never hand-placed.
  */
 
-// ── Box-drawing glyphs ──────────────────────────────────────────────
+// ── Glyphs ──────────────────────────────────────────────────────────
 const G = {
   TL: '┌', TR: '┐', BL: '└', BR: '┘',
   H: '─', V: '│',
   LT: '├', RT: '┤', TT: '┬', BT: '┴',
   CR: '┼',
 };
+
+/**
+ * Visual/display width — emojis counted as 2 in terminals.
+ * We use this for centering math but replace emojis with ASCII
+ * equivalents during rendering for guaranteed alignment.
+ */
+const EMOJI_MAP = {
+  '🔑': '(*)', '🛡': '(+)', '👁': '(o)', '📧': '(@)', '🔒': '(-)',
+  '⚙': '(*)', '🔍': '(?)', '⚠': '(!)', '✅': 'OK', '❌': 'XX',
+};
+
+function sanitize(s) {
+  let out = '';
+  for (const ch of s) {
+    out += EMOJI_MAP[ch] || ch;
+  }
+  return out;
+}
+
+function vlen(s) {
+  return sanitize(s).length;
+}
+
+function write(g, x, y, s) {
+  const clean = sanitize(s);
+  for (let i = 0; i < clean.length && x + i < g[y].length; i++) {
+    g[y][x + i] = clean[i];
+  }
+}
+
+/**
+ * Write centered text accounting for visual width.
+ */
+function writeCenter(g, x, y, w, s, margin = 0) {
+  const maxW = w - 2 * margin;
+  const clean = sanitize(s);
+  const text = clean.length > maxW ? clean.slice(0, maxW - 1) + '…' : clean;
+  const start = x + margin + Math.floor((maxW - text.length) / 2);
+  write(g, start, y, text);
+}
 
 /**
  * Create an empty grid filled with spaces.
@@ -22,29 +62,6 @@ const G = {
  */
 function grid(cols, rows) {
   return Array.from({ length: rows }, () => Array(cols).fill(' '));
-}
-
-/**
- * Write a string into the grid at position, truncating at edge.
- * @param {string[][]} g - grid
- * @param {number} x - column
- * @param {number} y - row
- * @param {string} s - text
- */
-function write(g, x, y, s) {
-  for (let i = 0; i < s.length && x + i < g[y].length; i++) {
-    g[y][x + i] = s[i];
-  }
-}
-
-/**
- * Write centered text.
- */
-function writeCenter(g, x, y, w, s, margin = 0) {
-  const maxW = w - 2 * margin;
-  const text = s.length > maxW ? s.slice(0, maxW - 1) + '…' : s;
-  const start = x + margin + Math.floor((maxW - text.length) / 2);
-  write(g, start, y, text);
 }
 
 /**
@@ -65,15 +82,11 @@ function box(g, x, y, w, h, title = '', lines = []) {
 
   // Title in top border
   if (title) {
-    const t = title.length > w - 4 ? title.slice(0, w - 5) + '…' : title;
+    const clean = sanitize(title);
+    const t = clean.length > w - 4 ? clean.slice(0, w - 5) + '…' : clean;
     const start = x + Math.floor((w - t.length) / 2);
-    g[y][x] = G.TL;
-    for (let c = 1; c < w - 1; c++) {
-      if (c >= start - x && c < start - x + t.length) {
-        g[y][x + c] = t[c - (start - x)];
-      } else if (c < start - x || c >= start - x + t.length) {
-        g[y][x + c] = G.H;
-      }
+    for (let c = 0; c < t.length; c++) {
+      g[y][start + c] = t[c];
     }
   }
 
