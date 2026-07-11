@@ -15,31 +15,62 @@ const G = {
 };
 
 /**
- * Visual/display width — emojis counted as 2 in terminals.
- * We use this for centering math but replace emojis with ASCII
- * equivalents during rendering for guaranteed alignment.
+ * wcwidth-style: return display width of a Unicode codepoint.
+ * Emojis, CJK, and wide symbols → 2. Combining marks → 0. Rest → 1.
  */
-const EMOJI_MAP = {
-  '🔑': '*', '🛡': '+', '👁': 'o', '📧': '@', '🔒': '-',
-  '⚙': '*', '🔍': '?', '⚠': '!', '✅': 'OK', '❌': 'XX',
-};
-
-function sanitize(s) {
-  let out = '';
-  for (const ch of s) {
-    out += EMOJI_MAP[ch] || ch;
-  }
-  return out;
+function wcwidth(cp) {
+  if (cp === 0) return 0;
+  // Zero-width joiners, variation selectors, combining marks
+  if (cp >= 0x200B && cp <= 0x200D) return 0; // ZWJ, ZWNJ, etc
+  if (cp >= 0xFE00 && cp <= 0xFE0F) return 0; // variation selectors
+  if (cp >= 0x0300 && cp <= 0x036F) return 0; // combining diacritics
+  // Emoji range
+  if (cp >= 0x1F000 && cp <= 0x1FFFF) return 2;
+  if (cp >= 0x2600 && cp <= 0x27BF) return 2; // Misc symbols (includes many emoji)
+  if (cp >= 0x2300 && cp <= 0x23FF) return 2; // Misc technical
+  if (cp >= 0x2B50 && cp <= 0x2B55) return 2; // Star, etc
+  // CJK
+  if (cp >= 0x1100 && cp <= 0x115F) return 2;
+  if (cp >= 0x2E80 && cp <= 0xA4CF) return 2;
+  if (cp >= 0xAC00 && cp <= 0xD7A3) return 2;
+  if (cp >= 0xF900 && cp <= 0xFAFF) return 2;
+  if (cp >= 0xFE30 && cp <= 0xFE6F) return 2;
+  if (cp >= 0xFF01 && cp <= 0xFF60) return 2;
+  if (cp >= 0xFFE0 && cp <= 0xFFE6) return 2;
+  if (cp >= 0x20000 && cp <= 0x2FFFD) return 2;
+  if (cp >= 0x30000 && cp <= 0x3FFFD) return 2;
+  return 1;
 }
 
-function vlen(s) {
-  return sanitize(s).length;
+/**
+ * Visual display width of a string — sum of wcwidth for each codepoint.
+ */
+function vw(s) {
+  let w = 0;
+  for (const ch of s) w += wcwidth(ch.codePointAt(0));
+  return w;
 }
 
+/**
+ * Write a string at grid position, tracking visual column width.
+ * Wide characters (cw=2) are split across two grid cells so
+ * each cell contributes exactly 1 JS char to the final join.
+ */
 function write(g, x, y, s) {
-  const clean = sanitize(s);
-  for (let i = 0; i < clean.length && x + i < g[y].length; i++) {
-    g[y][x + i] = clean[i];
+  let col = x;
+  for (const ch of s) {
+    if (col >= g[y].length) break;
+    const cp = ch.codePointAt(0);
+    const cw = wcwidth(cp);
+    if (cw === 2 && ch.length === 2) {
+      // Surrogate pair emoji: write high surrogate to cell[col],
+      // low surrogate to cell[col+1] so join produces correct 2-char sequence
+      g[y][col] = ch[0];
+      if (col + 1 < g[y].length) g[y][col + 1] = ch[1];
+    } else {
+      g[y][col] = ch;
+    }
+    col += cw;
   }
 }
 
@@ -48,10 +79,29 @@ function write(g, x, y, s) {
  */
 function writeCenter(g, x, y, w, s, margin = 0) {
   const maxW = w - 2 * margin;
-  const clean = sanitize(s);
-  const text = clean.length > maxW ? clean.slice(0, maxW - 1) + '…' : clean;
-  const start = x + margin + Math.floor((maxW - text.length) / 2);
+  const visualW = vw(s);
+  let text = s;
+  if (visualW > maxW) {
+    // Truncate by visual width
+    let tw = 0; let i = 0;
+    for (const ch of s) {
+      const cw = wcwidth(ch.codePointAt(0));
+      if (tw + cw > maxW - 1) break;
+      tw += cw; i++;
+    }
+    text = s.slice(0, i) + '…';
+  }
+  const start = x + margin + Math.floor((maxW - vw(text)) / 2);
   write(g, start, y, text);
+}
+
+/**
+ * Pad a rendered line to a uniform visual width by appending spaces.
+ */
+function padVisual(line, targetWidth) {
+  const current = vw(line);
+  if (current >= targetWidth) return line;
+  return line + ' '.repeat(targetWidth - current);
 }
 
 /**
@@ -80,14 +130,22 @@ function box(g, x, y, w, h, title = '', lines = []) {
   for (let c = 1; c < w - 1; c++) g[y][x + c] = G.H;
   g[y][x + w - 1] = G.TR;
 
-  // Title in top border
+  // Title in top border — use write() for emoji width awareness
   if (title) {
-    const clean = sanitize(title);
-    const t = clean.length > w - 4 ? clean.slice(0, w - 5) + '…' : clean;
-    const start = x + Math.floor((w - t.length) / 2);
-    for (let c = 0; c < t.length; c++) {
-      g[y][start + c] = t[c];
+    const maxTitleW = w - 4;
+    const vwTitle = vw(title);
+    let t = title;
+    if (vwTitle > maxTitleW) {
+      let tw = 0; let i = 0;
+      for (const ch of title) {
+        const cw = wcwidth(ch.codePointAt(0));
+        if (tw + cw > maxTitleW - 1) break;
+        tw += cw; i++;
+      }
+      t = title.slice(0, i) + '…';
     }
+    const start = x + Math.floor((w - vw(t)) / 2);
+    write(g, start, y, t);
   }
 
   // Side borders + body
@@ -166,12 +224,13 @@ function barBottom(g, x, y, w, title) {
 }
 
 /**
- * Render grid to string.
+ * Render grid to string, padding each line to uniform visual width.
  * @param {string[][]} g
+ * @param {number} cols - target visual columns
  * @returns {string}
  */
-function render(g) {
-  return g.map(row => row.join('')).join('\n');
+function render(g, cols) {
+  return g.map(row => padVisual(row.join(''), cols)).join('\n');
 }
 
 // ── Layout builder ───────────────────────────────────────────────────
@@ -220,14 +279,14 @@ export function renderLoginLayout(opts = {}) {
   row += logoH + gapH;
 
   // Left panel (admin)
-  box(g, 1, row, cols - 2, leftH, '🔑 ' + leftTitle, [
+  box(g, 1, row, cols - 2, leftH, leftTitle, [
     leftDesc,
     '>Email',
     '_' + emailPlaceholder + '_',
     '>Password',
     '_' + passPlaceholder + '_',
     '[' + leftBtn + ']',
-    '🛡 ' + demoBtn,
+    demoBtn,
   ]);
   row += leftH + gapH;
 
@@ -235,12 +294,12 @@ export function renderLoginLayout(opts = {}) {
   writeCenter(g, 0, row - 1, cols, '─── or ───');
 
   // Right panel (staff)
-  box(g, 1, row, cols - 2, rightH, '🔑 ' + rightTitle, [
+  box(g, 1, row, cols - 2, rightH, rightTitle, [
     rightDesc,
     '>Location',
     '_' + slugPlaceholder + '_',
     '>PIN',
-    '_' + pinPlaceholder + ' [👁]_',
+    '_' + pinPlaceholder + '_',
     '[' + rightBtn + ']',
   ]);
   row += rightH + gapH;
@@ -248,7 +307,7 @@ export function renderLoginLayout(opts = {}) {
   // Footer bar
   barBottom(g, 0, row, cols, footer);
 
-  return render(g);
+  return render(g, cols);
 }
 
 /**
@@ -288,7 +347,7 @@ export function renderTree(tree, cols = 80) {
   }
 
   layout(tree, 0);
-  return render(g);
+  return render(g, cols);
 }
 
 export default { renderLoginLayout, renderTree };
