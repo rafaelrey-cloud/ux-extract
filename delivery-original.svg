@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 375 722" width="375" height="722">
+  <style>
+    text { font-family: system-ui, -apple-system, sans-serif; }
+  </style>
+<rect x="0" y="0" width="375" height="722" rx="0" fill="#F9F7F4"/>
+  <g id="box-header" data-type="header" data-label="Delivery header" data-component="DeliveryModule">
+<rect x="12" y="12" width="351" height="56" rx="16" fill="#0D1B2A"/>
+  <text x="24" y="30" fontSize="11" fontWeight="800" anchor="start" id="text-eyebrow" data-type="text" data-label="eyebrow text" data-original-text="Delivery" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="11" font-weight="800" text-anchor="start" fill="rgba(255,255,255,0.65)">Delivery</text>
+  <text x="24" y="48" fontSize="18" fontWeight="800" anchor="start" id="text-title" data-type="text" data-label="page title" data-original-text="Delivery" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="18" font-weight="800" text-anchor="start" fill="#FFFFFF">Delivery</text>
+  <text x="24" y="62" fontSize="11" fontWeight="normal" anchor="start" id="text-counter" data-type="text" data-label="order count" data-original-text="15 ordini" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="11" font-weight="normal" text-anchor="start" fill="rgba(255,255,255,0.55)">15 ordini</text>
+<rect x="251" y="26" width="100" height="28" rx="14" fill="#FF5436" id="btn-create" data-type="button" data-label="create order button" data-action="create-order" data-component="DeliveryModule"/>
+  <text x="301" y="45" fontSize="11" fontWeight="700" anchor="middle" id="btn-create-text" data-type="text" data-label="create button text" data-original-text="+ Nuovo ordine" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="#FFFFFF">+ Nuovo ordine</text>
+  </g>
+  <g id="box-stats" data-type="stat-grid" data-label="Stats cards" data-component="DeliveryModule">
+  <g id="stat-0" data-type="stat" data-label="In attesa" data-component="DeliveryModule">
+<rect x="12" y="80" width="81" height="52" rx="12" fill="#FFFFFF" stroke="#E5E0D8"/>
+  <text x="20" y="96" fontSize="8" fontWeight="800" anchor="start" id="stat-label-0" data-type="text" data-label="stat label" data-original-text="In attesa" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="8" font-weight="800" text-anchor="start" fill="#8B847A">In attesa</text>
+  <text x="20" y="118" fontSize="22" fontWeight="800" anchor="start" id="stat-value-0" data-type="text" data-label="stat value" data-original-text="3" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="22" font-weight="800" text-anchor="start" fill="#FF5436">3</text>
+  </g>
+  <g id="stat-1" data-type="stat" data-label="In preparaz." data-component="DeliveryModule">
+<rect x="101" y="80" width="81" height="52" rx="12" fill="#FFFFFF" stroke="#E5E0D8"/>
+  <text x="109" y="96" fontSize="8" fontWeight="800" anchor="start" id="stat-label-1" data-type="text" data-label="stat label" data-original-text="In preparaz." data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="8" font-weight="800" text-anchor="start" fill="#8B847A">In preparaz.</text>
+  <text x="109" y="118" fontSize="22" fontWeight="800" anchor="start" id="stat-value-1" data-type="text" data-label="stat value" data-original-text="2" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="22" font-weight="800" text-anchor="start" fill="#B98900">2</text>
+  </g>
+  <g id="stat-2" data-type="stat" data-label="Pronti" data-component="DeliveryModule">
+<rect x="190" y="80" width="81" height="52" rx="12" fill="#FFFFFF" stroke="#E5E0D8"/>
+  <text x="198" y="96" fontSize="8" fontWeight="800" anchor="start" id="stat-label-2" data-type="text" data-label="stat label" data-original-text="Pronti" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="8" font-weight="800" text-anchor="start" fill="#8B847A">Pronti</text>
+  <text x="198" y="118" fontSize="22" fontWeight="800" anchor="start" id="stat-value-2" data-type="text" data-label="stat value" data-original-text="8" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="22" font-weight="800" text-anchor="start" fill="#15C26B">8</text>
+  </g>
+  <g id="stat-3" data-type="stat" data-label="Totale" data-component="DeliveryModule">
+<rect x="279" y="80" width="81" height="52" rx="12" fill="#FFFFFF" stroke="#E5E0D8"/>
+  <text x="287" y="96" fontSize="8" fontWeight="800" anchor="start" id="stat-label-3" data-type="text" data-label="stat label" data-original-text="Totale" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="8" font-weight="800" text-anchor="start" fill="#8B847A">Totale</text>
+  <text x="287" y="118" fontSize="22" fontWeight="800" anchor="start" id="stat-value-3" data-type="text" data-label="stat value" data-original-text="15" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="22" font-weight="800" text-anchor="start" fill="#0D1B2A">15</text>
+  </g>
+  </g>
+  <g id="box-filters" data-type="filter-bar" data-label="Filter buttons" data-component="DeliveryModule">
+  <text x="16" y="160" fontSize="9" fontWeight="700" anchor="start" id="text-filter-label" data-type="text" data-label="filter label" data-original-text="Filtra:" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="9" font-weight="700" text-anchor="start" fill="#8B847A">Filtra:</text>
+<rect x="60" y="148" width="44" height="22" rx="11" fill="#0D1B2A" stroke="none" id="filter-todos" data-type="filter" data-label="Tutti" data-active="true" data-component="DeliveryModule"/>
+  <text x="82" y="162" fontSize="8" fontWeight="700" anchor="middle" id="filter-todos-text" data-type="text" data-label="filter text" data-original-text="Tutti" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="8" font-weight="700" text-anchor="middle" fill="#FFFFFF">Tutti</text>
+<rect x="110" y="148" width="60" height="22" rx="11" fill="#FFFFFF" stroke="#E5E0D8" id="filter-delivery" data-type="filter" data-label="Delivery" data-active="false" data-component="DeliveryModule"/>
+  <text x="140" y="162" fontSize="8" fontWeight="700" anchor="middle" id="filter-delivery-text" data-type="text" data-label="filter text" data-original-text="Delivery" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="8" font-weight="700" text-anchor="middle" fill="#8B847A">Delivery</text>
+<rect x="176" y="148" width="60" height="22" rx="11" fill="#FFFFFF" stroke="#E5E0D8" id="filter-counter" data-type="filter" data-label="Banco" data-active="false" data-component="DeliveryModule"/>
+  <text x="206" y="162" fontSize="8" fontWeight="700" anchor="middle" id="filter-counter-text" data-type="text" data-label="filter text" data-original-text="Banco" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="8" font-weight="700" text-anchor="middle" fill="#8B847A">Banco</text>
+  </g>
+  <g id="kanban-queue" data-type="kanban-column" data-label="In attesa" data-kanban-status="queue" data-component="DeliveryModule">
+  <circle cx="20" cy="196" r="4" fill="#5B6B7B"/>
+  <text x="30" y="202" fontSize="11" fontWeight="700" anchor="start" id="col-header-queue" data-type="text" data-label="column header" data-original-text="In attesa (1)" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="11" font-weight="700" text-anchor="start" fill="#0D1B2A">In attesa (1)</text>
+  <g id="card-a1" data-type="card" data-label="Ticket #A1B2C3" data-component="DeliveryTicketCard">
+<rect x="12" y="208" width="351" height="110" rx="12" fill="#FFFFFF" stroke="#E5E0D8"/>
+<rect x="22" y="218" width="70" height="18" rx="9" fill="#E9FBF1"/>
+  <text x="30" y="230" fontSize="9" fontWeight="800" anchor="start" id="badge-a1" data-type="badge" data-label="source badge" data-original-text="Delivery" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="9" font-weight="800" text-anchor="start" fill="#0E7A42">Delivery</text>
+  <text x="353" y="230" fontSize="10" fontWeight="700" anchor="end" id="code-a1" data-type="text" data-label="order code" data-original-text="#A1B2C3" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="10" font-weight="700" text-anchor="end" fill="#8B847A">#A1B2C3</text>
+  <text x="22" y="250" fontSize="13" fontWeight="800" anchor="start" id="table-a1" data-type="text" data-label="table label" data-original-text="Mesa 5" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="13" font-weight="800" text-anchor="start" fill="#0D1B2A">Mesa 5</text>
+  <text x="26" y="266" fontSize="10" fontWeight="600" anchor="start" id="item-qty-a1-0" data-type="text" data-label="item 0 quantity" data-original-text="2x" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="10" font-weight="600" text-anchor="start" fill="#8B847A">2x</text>
+  <text x="46" y="266" fontSize="10" fontWeight="normal" anchor="start" id="item-name-a1-0" data-type="text" data-label="item 0 name" data-original-text="Margherita" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="10" font-weight="normal" text-anchor="start" fill="#0D1B2A">Margherita</text>
+  <text x="26" y="280" fontSize="10" fontWeight="600" anchor="start" id="item-qty-a1-1" data-type="text" data-label="item 1 quantity" data-original-text="1x" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="10" font-weight="600" text-anchor="start" fill="#8B847A">1x</text>
+  <text x="46" y="280" fontSize="10" fontWeight="normal" anchor="start" id="item-name-a1-1" data-type="text" data-label="item 1 name" data-original-text="Birra Moretti" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="10" font-weight="normal" text-anchor="start" fill="#0D1B2A">Birra Moretti</text>
+<rect x="22" y="292" width="56" height="18" rx="9" fill="#F1ECE4" id="timer-a1" data-type="badge" data-label="timer" data-component="DeliveryTicketCard"/>
+  <text x="28" y="304" fontSize="9" fontWeight="700" anchor="start" id="timer-text-a1" data-type="text" data-label="timer text" data-original-text="⏱ --:--" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="9" font-weight="700" text-anchor="start" fill="#8B847A">⏱ --:--</text>
+  <text x="353" y="304" fontSize="9" fontWeight="normal" anchor="end" id="customer-a1" data-type="text" data-label="customer name" data-original-text="María G." data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="9" font-weight="normal" text-anchor="end" fill="#8B847A">María G.</text>
+  </g>
+  </g>
+  <g id="kanban-prep" data-type="kanban-column" data-label="In preparazione" data-kanban-status="prep" data-component="DeliveryModule">
+  <circle cx="20" cy="346" r="4" fill="#FFCD3C"/>
+  <text x="30" y="352" fontSize="11" fontWeight="700" anchor="start" id="col-header-prep" data-type="text" data-label="column header" data-original-text="In preparazione (1)" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="11" font-weight="700" text-anchor="start" fill="#0D1B2A">In preparazione (1)</text>
+  <g id="card-b2" data-type="card" data-label="Ticket #D4E5F6" data-component="DeliveryTicketCard">
+<rect x="12" y="358" width="351" height="110" rx="12" fill="#FFFFFF" stroke="#E5E0D8"/>
+<rect x="22" y="368" width="70" height="18" rx="9" fill="#FFF8E0"/>
+  <text x="30" y="380" fontSize="9" fontWeight="800" anchor="start" id="badge-b2" data-type="badge" data-label="source badge" data-original-text="Banco" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="9" font-weight="800" text-anchor="start" fill="#B98900">Banco</text>
+  <text x="353" y="380" fontSize="10" fontWeight="700" anchor="end" id="code-b2" data-type="text" data-label="order code" data-original-text="#D4E5F6" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="10" font-weight="700" text-anchor="end" fill="#8B847A">#D4E5F6</text>
+  <text x="22" y="400" fontSize="13" fontWeight="800" anchor="start" id="table-b2" data-type="text" data-label="table label" data-original-text="Mesa 3" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="13" font-weight="800" text-anchor="start" fill="#0D1B2A">Mesa 3</text>
+  <text x="26" y="416" fontSize="10" fontWeight="600" anchor="start" id="item-qty-b2-0" data-type="text" data-label="item 0 quantity" data-original-text="1x" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="10" font-weight="600" text-anchor="start" fill="#8B847A">1x</text>
+  <text x="46" y="416" fontSize="10" fontWeight="normal" anchor="start" id="item-name-b2-0" data-type="text" data-label="item 0 name" data-original-text="Fiorentina" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="10" font-weight="normal" text-anchor="start" fill="#0D1B2A">Fiorentina</text>
+  <text x="26" y="430" fontSize="10" fontWeight="600" anchor="start" id="item-qty-b2-1" data-type="text" data-label="item 1 quantity" data-original-text="2x" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="10" font-weight="600" text-anchor="start" fill="#8B847A">2x</text>
+  <text x="46" y="430" fontSize="10" fontWeight="normal" anchor="start" id="item-name-b2-1" data-type="text" data-label="item 1 name" data-original-text="Spritz" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="10" font-weight="normal" text-anchor="start" fill="#0D1B2A">Spritz</text>
+<rect x="22" y="442" width="56" height="18" rx="9" fill="#FFF8E0" id="timer-b2" data-type="badge" data-label="timer" data-component="DeliveryTicketCard"/>
+  <text x="28" y="454" fontSize="9" fontWeight="700" anchor="start" id="timer-text-b2" data-type="text" data-label="timer text" data-original-text="⏱ --:--" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="9" font-weight="700" text-anchor="start" fill="#B98900">⏱ --:--</text>
+  </g>
+  </g>
+  <g id="kanban-ready" data-type="kanban-column" data-label="Pronti da consegnare" data-kanban-status="ready" data-component="DeliveryModule">
+  <circle cx="20" cy="496" r="4" fill="#15C26B"/>
+  <text x="30" y="502" fontSize="11" fontWeight="700" anchor="start" id="col-header-ready" data-type="text" data-label="column header" data-original-text="Pronti da consegnare (1)" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="11" font-weight="700" text-anchor="start" fill="#0D1B2A">Pronti da consegnare (1)</text>
+  <g id="card-c3" data-type="card" data-label="Ticket #G7H8I9" data-component="DeliveryTicketCard">
+<rect x="12" y="508" width="351" height="110" rx="12" fill="#E9FBF1" stroke="#BDEFD2"/>
+<rect x="22" y="518" width="70" height="18" rx="9" fill="#FFF8E0"/>
+  <text x="30" y="530" fontSize="9" fontWeight="800" anchor="start" id="badge-c3" data-type="badge" data-label="source badge" data-original-text="Banco" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="9" font-weight="800" text-anchor="start" fill="#B98900">Banco</text>
+  <text x="353" y="530" fontSize="10" fontWeight="700" anchor="end" id="code-c3" data-type="text" data-label="order code" data-original-text="#G7H8I9" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="10" font-weight="700" text-anchor="end" fill="#8B847A">#G7H8I9</text>
+  <text x="22" y="550" fontSize="13" fontWeight="800" anchor="start" id="table-c3" data-type="text" data-label="table label" data-original-text="Banco" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="13" font-weight="800" text-anchor="start" fill="#0D1B2A">Banco</text>
+  <text x="26" y="566" fontSize="10" fontWeight="600" anchor="start" id="item-qty-c3-0" data-type="text" data-label="item 0 quantity" data-original-text="3x" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="10" font-weight="600" text-anchor="start" fill="#8B847A">3x</text>
+  <text x="46" y="566" fontSize="10" fontWeight="normal" anchor="start" id="item-name-c3-0" data-type="text" data-label="item 0 name" data-original-text="Caffè" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="10" font-weight="normal" text-anchor="start" fill="#0D1B2A">Caffè</text>
+<rect x="22" y="596" width="331" height="24" rx="12" fill="#15C26B" id="btn-deliver-c3" data-type="button" data-label="deliver button" data-action="deliver" data-component="DeliveryTicketCard"/>
+  <text x="187.5" y="612" fontSize="10" fontWeight="700" anchor="middle" id="btn-deliver-text-c3" data-type="text" data-label="deliver button text" data-original-text="✓ Marca come consegnato" data-component="DeliveryTicketCard" font-family="system-ui, sans-serif" font-size="10" font-weight="700" text-anchor="middle" fill="#FFFFFF">✓ Marca come consegnato</text>
+  </g>
+  </g>
+  <g id="banner-construction" data-type="banner" data-label="Construction banner" data-component="DeliveryModule">
+<rect x="12" y="642" width="351" height="72" rx="12" fill="#FFFBEE" stroke="#FFCD3C" stroke-dasharray="4,3"/>
+  <text x="187.5" y="664" fontSize="18" fontWeight="normal" anchor="middle" id="banner-icon" data-type="text" data-label="banner icon" data-original-text="🚧" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="18" font-weight="normal" text-anchor="middle" fill="#B98900">🚧</text>
+  <text x="187.5" y="682" fontSize="14" fontWeight="800" anchor="middle" id="banner-title" data-type="text" data-label="banner title" data-original-text="In arrivo" data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="14" font-weight="800" text-anchor="middle" fill="#B98900">In arrivo</text>
+  <text x="187.5" y="698" fontSize="9" fontWeight="normal" anchor="middle" id="banner-body" data-type="text" data-label="banner body" data-original-text="Tracking in tempo reale e gestione rider in arrivo." data-component="DeliveryModule" font-family="system-ui, sans-serif" font-size="9" font-weight="normal" text-anchor="middle" fill="#8d6900">Tracking in tempo reale e gestione rider in arrivo.</text>
+  </g>
+
+</svg>
