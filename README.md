@@ -5,17 +5,14 @@ A reusable, zero-dependency source-only UX analysis tool that extracts structure
 ## Quick Start
 
 ```bash
-# Scan from project root, output JSON report
-node src/ux-extract/cli.mjs --root . --format json
+# Scan a project from its root, output JSON report
+node cli.mjs --root /path/to/project --format json
 
-# Scan with legacy route detection, output Markdown
-node src/ux-extract/cli.mjs --root . --format markdown
+# Use a project config file
+node cli.mjs --config configs-cli/my-project.toml --format markdown
 
-# Write to file
-node src/ux-extract/cli.mjs --root . --out report.json
-
-# Fail on errors
-node src/ux-extract/cli.mjs --root . --fail-on error
+# Generate ASCII wireframe from a component
+node cli.mjs --root /path/to/project --layout LoginPage --format ascii
 ```
 
 Or via npm scripts:
