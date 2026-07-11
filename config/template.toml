@@ -32,3 +32,14 @@ apiToken     = ""
 baseUrl      = ""
 healthPath   = ""
 authToken    = ""
+
+# ── Authentication (for auto-testing protected pages) ──
+# ux-extract uses this to get a JWT token before fetching pages.
+# NEVER commit the real configs-cli/<project>.toml — it's git-ignored.
+[auth]
+type         = ""       # "admin" or "operative"
+loginUrl     = ""       # e.g. "https://example.com/api/auth/login"
+email        = ""       # admin login
+password     = ""       # admin password (stays in configs-cli only)
+slug         = ""       # tenant slug (operative login)
+pin          = ""       # PIN (operative login)
